@@ -1,6 +1,5 @@
 defmodule Excoin.Opcodes do
 
-	#TODO:- finish codes
 	def code(:OP_0), do: 0
 	def code(:OP_FALSE), do: 0
 	def code(:OP_1), do: 81
@@ -20,6 +19,98 @@ defmodule Excoin.Opcodes do
 	def code(:OP_14), do: 0x5e
 	def code(:OP_15), do: 0x5f
 	def code(:OP_16), do: 0x60
+	def code(:OP_PUSHDATA0), do: 0
+	def code(:OP_PUSHDATA1), do: 76
+	def code(:OP_PUSHDATA2), do: 77
+	def code(:OP_PUSHDATA4), do: 78
+	def code(:OP_PUSHDATA_INVALID), do: 238
+	def code(:OP_NOP), do: 97
+	def code(:OP_DUP), do: 118
+	def code(:OP_HASH160), do: 169
+	def code(:OP_EQUAL), do: 135
+	def code(:OP_VERIFY), do: 105
+	def code(:OP_EQUALVERIFY), do: 136
+	def code(:OP_CHECKSIG), do: 172
+	def code(:OP_CHECKSIGVERIFY), do: 173
+	def code(:OP_CHECKMULTISIG ), do: 174
+	def code(:OP_CHECKMULTISIGVERIFY), do: 175
+	def code(:OP_TOALTSTACK), do: 107
+	def code(:OP_FROMALTSTACK), do: 108
+	def code(:OP_TUCK), do: 125
+	def code(:OP_SWAP), do: 124
+	def code(:OP_BOOLAND), do: 154
+	def code(:OP_ADD), do: 147
+	def code(:OP_SUB), do: 148
+	def code(:OP_GREATERTHANOREQUAL), do: 162
+	def code(:OP_DROP), do: 117
+	def code(:OP_HASH256), do: 170
+	def code(:OP_SHA256), do: 168
+	def code(:OP_SHA1), do: 167
+	def code(:OP_RIPEMD160), do: 166
+	def code(:OP_NOP1), do: 176
+	def code(:OP_NOP2), do: 177
+	def code(:OP_NOP3), do: 178
+	def code(:OP_NOP4), do: 179
+	def code(:OP_NOP5), do: 180
+	def code(:OP_NOP6), do: 181
+	def code(:OP_NOP7), do: 182
+	def code(:OP_NOP8), do: 183
+	def code(:OP_NOP9), do: 184
+	def code(:OP_NOP10), do: 185
+	def code(:OP_CODESEPARATOR), do: 171
+	def code(:OP_MIN), do: 163
+	def code(:OP_MAX), do: 164
+	def code(:OP_2OVER), do: 112
+	def code(:OP_2ROT), do: 113
+	def code(:OP_2SWAP), do: 114
+	def code(:OP_IFDUP), do: 115
+	def code(:OP_DEPTH), do: 116
+	def code(:OP_1NEGATE), do: 79
+	def code(:OP_WITHIN), do: 165
+	def code(:OP_NUMEQUAL), do: 156
+	def code(:OP_NUMEQUALVERIFY), do: 157
+	def code(:OP_LESSTHAN), do: 159
+	def code(:OP_LESSTHANOREQUAL), do: 161
+	def code(:OP_GREATERTHAN), do: 160
+	def code(:OP_NOT), do: 145
+	def code(:OP_0NOTEQUAL), do: 146
+	def code(:OP_ABS), do: 144
+	def code(:OP_1ADD), do: 139
+	def code(:OP_1SUB), do: 140
+	def code(:OP_NEGATE), do: 143
+	def code(:OP_BOOLOR), do: 155
+	def code(:OP_NUMNOTEQUAL), do: 158
+	def code(:OP_RETURN), do: 106
+	def code(:OP_OVER), do: 120
+	def code(:OP_IF), do: 99
+	def code(:OP_NOTIF), do: 100
+	def code(:OP_ELSE), do: 103
+	def code(:OP_ENDIF), do: 104
+	def code(:OP_PICK), do: 121
+	def code(:OP_SIZE), do: 130
+	def code(:OP_VER), do: 98
+	def code(:OP_ROLL), do: 122
+	def code(:OP_ROT), do: 123
+	def code(:OP_2DROP), do: 109
+	def code(:OP_2DUP), do: 110
+	def code(:OP_3DUP), do: 111
+	def code(:OP_NIP), do: 119
+	def code(:OP_CAT), do: 126
+	def code(:OP_SUBSTR), do: 127
+	def code(:OP_LEFT), do: 128
+	def code(:OP_RIGHT), do: 129
+	def code(:OP_INVERT), do: 131
+	def code(:OP_AND), do: 132
+	def code(:OP_OR), do: 133
+	def code(:OP_XOR), do: 134
+	def code(:OP_2MUL), do: 141
+	def code(:OP_2DIV), do: 142
+	def code(:OP_MUL), do: 149
+	def code(:OP_DIV), do: 150
+	def code(:OP_MOD), do: 151
+	def code(:OP_LSHIFT), do: 152
+	def code(:OP_RSHIFT), do: 153
+	def code(:OP_INVALIDOPCODE), do: 0xff
 
 
 	def codes do

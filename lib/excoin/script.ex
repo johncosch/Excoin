@@ -2,10 +2,10 @@ defmodule Excoin.Script do
 
   alias Excoin.Opcodes, as: Opcodes 
 
-  @op_pushdata0 Opcodes.codes[:OP_PUSHDATA0]
-  @op_pushdata1 Opcodes.codes[:OP_PUSHDATA1]
-  @op_pushdata2 Opcodes.codes[:OP_PUSHDATA2]
-  @op_pushdata4 Opcodes.codes[:OP_PUSHDATA4]
+  @op_pushdata0 Opcodes.code(:OP_PUSHDATA0)
+  @op_pushdata1 Opcodes.code(:OP_PUSHDATA1)
+  @op_pushdata2 Opcodes.code(:OP_PUSHDATA2)
+  @op_pushdata4 Opcodes.code(:OP_PUSHDATA4)
 
   def as_string(chunks) do
     _as_string(chunks, "", 0)
@@ -39,8 +39,7 @@ defmodule Excoin.Script do
   def build(input_script), do: parse(input_script)
 
   def parse(bytes) do
-    chunks = []
-    chunks = _parse(:binary.bin_to_list(bytes), chunks, bytes)
+    chunks = _parse(:binary.bin_to_list(bytes), [], bytes)
   end
 
   defp _parse([], chunks, _), do: chunks 
@@ -131,7 +130,7 @@ defmodule Excoin.Script do
   defp _save_invalid_push_data(chunks, bytes) do
     {_, chunks} = List.Ext.pop(chunks)
     chunks = chunks ++ [bytes]
-    append_meta_tuple(chunks, Opcodes.codes[:OP_PUSHDATA_INVALID], byte_size(bytes))
+    append_meta_tuple(chunks, Opcodes.code(:OP_PUSHDATA_INVALID), byte_size(bytes))
   end
 
   def binary_from_string(script_string) do
