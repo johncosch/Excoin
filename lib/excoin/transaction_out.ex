@@ -28,4 +28,25 @@ defmodule Excoin.TransactionOut do
     amount <> Excoin.Protocol.pack_var_int(transaction_out.script |> byte_size) <> transaction_out.script
   end
 
+  def from_io(buf) do
+   {amount, buf} = amount_from_io(buf)
+   {script, buf} = script_from_io(buf)
+
+   tx_out = %Excoin.TransactionOut{amount: amount, script: script}
+
+   {tx_out, buf}
+  end
+
+  defp amount_from_io(buf) do
+    << bin_val :: binary-size(8), buf :: binary >> = buf
+    << value :: unsigned-native-integer-size(64), _ :: binary >> = bin_val
+    {value, buf}
+  end
+
+  defp script_from_io(buf) do
+    {script_length, buf} = Excoin.Protocol.unpack_var_int_from_io(buf)
+    << script :: binary-size(script_length), buf :: binary >> = buf 
+    {script, buf}   
+  end
+
 end

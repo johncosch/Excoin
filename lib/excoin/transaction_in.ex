@@ -1,6 +1,6 @@
 defmodule Excoin.TransactionIn do
 
-  defstruct previous_output_hash: "", previous_output_index: "", script_sig_length: 0, script_sig: "", sequence: <<255, 255, 255, 255>> 
+  defstruct previous_output_hash: "", previous_output_index: "", script_sig: "", sequence: <<255, 255, 255, 255>> 
 
   def from_hash(map) do
   	%Excoin.TransactionIn{
@@ -13,16 +13,7 @@ defmodule Excoin.TransactionIn do
 
  defp prev_out_hash_from_hash(map) do
  	previous_hash = map["previous_transaction_hash"] || map["prev_out"]["hash"]
- 	Base.decode16!(previous_hash, case: :lower) |> reverse_bin
- end
-
- def reverse_bin(bin) do
- 	_reverse_bin(bin, <<>>)
- end
-
- defp _reverse_bin(<<>>, new_bin), do: new_bin
- defp _reverse_bin(<<head :: binary-size(1), rest :: binary>> , new_bin) do
- 	_reverse_bin(rest, head <> new_bin)
+ 	Base.decode16!(previous_hash, case: :lower) |> Binary.Ext.reverse
  end
 
  defp prev_out_index_from_hash(map) do
@@ -31,7 +22,7 @@ defmodule Excoin.TransactionIn do
 
  defp script_sig_from_hash(map) do
  	case Map.has_key?(map, "coinbase") do
- 		true ->	Base.decode16!(map.coinbase, case: :lower)
+ 		true ->	Base.decode16!(map["coinbase"], case: :lower)
  		false -> Excoin.Script.binary_from_string(map["scriptSig"] || map["script"])
  	end
  end
@@ -52,6 +43,39 @@ defmodule Excoin.TransactionIn do
  	<< out_hash :: binary-size(32), _ :: binary >> = prev_out_hash
  	out_index = << prev_out_index :: little-size(32) >>
  	out_hash <> out_index
+ end
+
+ def from_io(buf) do 	
+	{prev_out_hash, prev_out_index, buf} = prev_output_hash_from_io(buf)
+	{script_sig, buf} = script_sig_from_io(buf)
+	{sequence, buf} = sequence_from_io(buf)
+
+	tx_in = %Excoin.TransactionIn{ 
+						:previous_output_hash => prev_out_hash,
+			  		:previous_output_index => prev_out_index,
+			  		:script_sig => script_sig,
+			  		:sequence => sequence
+					}
+
+	{tx_in, buf}
+ end
+
+ defp prev_output_hash_from_io(buf) do
+ 	<< chunk :: binary-size(36), buf :: binary >> = buf
+	<< prev_out_hash :: binary-size(32), chunk_remainder :: binary >> = chunk
+	<< prev_out_index :: little-size(32), _ :: binary >> = chunk_remainder
+	{prev_out_hash, prev_out_index, buf}
+ end
+
+ defp script_sig_from_io(buf) do
+ 	{script_sig_length, buf} = Excoin.Protocol.unpack_var_int_from_io(buf)
+ 	<< script_sig :: binary-size(script_sig_length), buf :: binary >> = buf
+ 	{script_sig, buf}
+ end
+
+ defp sequence_from_io(buf) do
+ 	<< sequence :: binary-size(4), buf :: binary >> = buf
+ 	{sequence, buf}
  end
 
 end

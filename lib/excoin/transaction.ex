@@ -8,8 +8,7 @@ defmodule Excoin.Transaction do
   @default_version 1
 
   def from_json(json) do
-    payload = Poison.Parser.parse!(json) |> 
-              from_hash
+    Poison.Parser.parse!(json) |> from_hash
   end
 
   def from_hash(map) do
@@ -49,6 +48,60 @@ defmodule Excoin.Transaction do
 
   defp int_32_to_payload(int) do
     << int :: little-size(32) >>
+  end
+
+  def from_io(buf) do
+    {ver, buf} = ver_from_io(buf)
+    {ins, buf} = tx_in_from_io(buf)
+    {outs, buf} = tx_out_from_io(buf)
+    {lock_time, buf} = lock_time_from_io(buf)
+
+    tx = %Excoin.Transaction{
+        :ver => ver,
+        :lock_time => lock_time,
+        :in => ins,
+        :out => outs
+      }
+
+    {tx, buf}
+  end
+
+  defp ver_from_io(buf) do
+    << ver_bin :: binary-size(4), buf :: binary >> = buf
+    << ver :: little-size(32), _ :: binary >> = ver_bin
+    {ver, buf}
+  end
+
+  defp tx_in_from_io(buf) do
+    {size, buf} = Excoin.Protocol.unpack_var_int_from_io(buf)
+    _tx_in_from_io([], buf, size)
+  end
+
+  defp _tx_in_from_io(ins, buf, 0), do: {ins, buf} 
+  defp _tx_in_from_io(ins, <<>>, _), do: {ins, <<>>}
+  defp _tx_in_from_io(ins, buf, size) do
+     {tx_in, buf} = TransactionIn.from_io(buf)
+     ins = ins ++ [tx_in]
+    _tx_in_from_io(ins, buf, size - 1)
+  end
+
+  defp tx_out_from_io(buf) do
+    {size, buf} = Excoin.Protocol.unpack_var_int_from_io(buf)
+    _tx_out_from_io([], buf, size)
+  end
+
+  defp _tx_out_from_io(outs, buf, 0), do: {outs, buf}
+  defp _tx_out_from_io(outs, <<>>, _), do: {outs, <<>>}
+  defp _tx_out_from_io(outs, buf, size) do
+     {tx_out, buf} = TransactionOut.from_io(buf)
+     outs = outs ++ [tx_out]
+    _tx_out_from_io(outs, buf, size - 1)
+  end
+
+  defp lock_time_from_io(buf) do
+    << lock_time_bin :: binary-size(4), buf :: binary >> = buf
+    << lock_time :: little-size(32), _ :: binary >> = lock_time_bin
+    {lock_time, buf}
   end
 
 end

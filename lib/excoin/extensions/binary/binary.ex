@@ -1,0 +1,3 @@
+defmodule Binary do 
+
+end
