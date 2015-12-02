@@ -8,5 +8,5 @@ otp_release:
   - 17.4
   - 17.5
   - 18.0
-script:
-  - "MIX_ENV=test mix coveralls.travis"
+after_success:
+  - if [ "$TRAVIS_OTP_RELEASE" != "17.3" ]; then MIX_ENV=test mix coveralls.travis; fi
